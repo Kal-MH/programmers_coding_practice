@@ -72,17 +72,6 @@ function App({ target }) {
           length % this.state.pagePerCnt === 0 ? maxPageCnt : maxPageCnt + 1,
         currentPage: 1,
       });
-
-      table.setState(
-        this.state.workers.slice(
-          (this.state.currentPage - 1) * this.state.pagePerCnt,
-          this.state.currentPage * this.state.pagePerCnt
-        )
-      );
-      pagination.setState({
-        maxPageCnt: this.state.maxPageCnt,
-        currentPage: this.state.currentPage,
-      });
     } catch (e) {
       throw new Error(e);
     }

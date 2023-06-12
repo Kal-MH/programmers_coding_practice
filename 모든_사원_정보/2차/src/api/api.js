@@ -1,7 +1,7 @@
 const API_END_POINT =
-  "http://localhost:5500/과제테스트/모든_사원_정보/1차/src/fakeDB";
+  "http://localhost:5500/과제테스트/모든_사원_정보/2차/src/fakeDB";
 
-const request = async (url) => {
+export async function request(url) {
   try {
     const res = await fetch(`${API_END_POINT}${url}`);
 
@@ -9,18 +9,22 @@ const request = async (url) => {
       const data = await res.json();
       return data;
     }
-    return [];
+
+    throw new Error("Error: res fail");
   } catch (e) {
     throw new Error(e);
   }
-};
+}
 
-export const getWorkers = async () => {
+export async function getWorkers(url) {
   try {
     const data = await request("/data.json");
 
-    return data;
+    return {
+      keys: Object.keys(data[0]),
+      data,
+    };
   } catch (e) {
     throw new Error(e);
   }
-};
+}

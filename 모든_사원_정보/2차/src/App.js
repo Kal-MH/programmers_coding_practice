@@ -1,83 +1,97 @@
-import { getWorkers } from "./apis/api.js";
-import Dropdown from "./components/Dropdown.js";
-import Pagination from "./components/Pagination.js";
-import Table from "./components/Table.js";
+import Dropdown from "./Dropdown.js";
+import Pagination from "./Pagination.js";
+import Table from "./Table.js";
+import { getWorkers } from "./api/api.js";
+
+const TABLE_HEAD_KEY = ["name", "title", "email", "role"];
+const OPTION_VALUES = [5, 10];
 
 function App({ target }) {
-  this.state = {
-    workers: [],
-    maxPageCnt: 1,
-    currentPage: 1,
-    pagePerCnt: 5,
-  };
+  let state = null;
+  let table = null;
+  let pagination = null;
+  let dropdown = null;
 
   this.setState = (nextState) => {
-    this.state = {
-      ...this.state,
+    state = {
+      ...state,
       ...nextState,
     };
 
-    table.setState(
-      this.state.workers.slice(
-        (this.state.currentPage - 1) * this.state.pagePerCnt,
-        this.state.currentPage * this.state.pagePerCnt
-      )
-    );
-    pagination.setState({
-      maxPageCnt: this.state.maxPageCnt,
-      currentPage: this.state.currentPage,
-    });
+    const { workers, maxPageNum, curPageNum, optionValue } = state;
+
+    table &&
+      table.setState({
+        workers: workers.slice(
+          (curPageNum - 1) * optionValue,
+          curPageNum * optionValue
+        ),
+      });
+
+    pagination &&
+      pagination.setState({
+        maxPageNum: maxPageNum,
+        curPageNum: curPageNum,
+      });
   };
 
-  new Dropdown({
-    target,
-    initialData: [5, 15],
-    onChange: (option) => {
-      const length = this.state.workers.length;
-      const maxPageCnt = parseInt(length / option);
-
-      this.setState({
-        maxPageCnt: length % option === 0 ? maxPageCnt : maxPageCnt + 1,
-        pagePerCnt: option,
-        currentPage: 1,
-      });
-    },
-  });
-
-  const table = new Table({
-    target,
-    initialData: [],
-  });
-  const pagination = new Pagination({
-    target,
-    initialData: {
-      maxPageCnt: 1,
-      currentPage: 1,
-    },
-    onClick: (index) => {
-      this.setState({ currentPage: index });
-    },
-  });
-
-  this.init = async () => {
+  const init = async () => {
     try {
-      const workers = await getWorkers();
+      const { keys, data } = await getWorkers();
 
-      const length = workers.length;
-      const maxPageCnt = parseInt(length / this.state.pagePerCnt);
+      state = {
+        workers: data,
+        maxPageNum: Math.ceil(data.length / 5),
+        curPageNum: 1,
+        optionValue: 5,
+      };
 
-      this.setState({
-        workers,
-        maxPageCnt:
-          length % this.state.pagePerCnt === 0 ? maxPageCnt : maxPageCnt + 1,
-        currentPage: 1,
+      const { workers, maxPageNum, curPageNum, optionValue } = state;
+
+      dropdown = new Dropdown({
+        target,
+        initialState: {
+          options: OPTION_VALUES,
+        },
+        onSelect: (option) => {
+          this.setState({
+            optionValue: option,
+            maxPageNum: Math.ceil(data.length / option),
+            curPageNum: 1,
+          });
+        },
+      });
+
+      table = new Table({
+        target,
+        initialState: {
+          workers: workers.slice(0, optionValue),
+        },
+        tableKeys: keys,
+      });
+
+      pagination = new Pagination({
+        target,
+        initialState: {
+          maxPageNum: maxPageNum,
+          curPageNum: curPageNum,
+        },
+        onClick: (curPage) => {
+          this.setState({
+            curPageNum: curPage,
+          });
+        },
       });
     } catch (e) {
+      const HomeHeaderComponent = document.createElement("h1");
+      HomeHeaderComponent.appendChild(document.createTextNode("Table"));
+
+      target.appendChild(HomeHeaderComponent);
       throw new Error(e);
     }
   };
 
-  this.init();
+  init();
 }
 
 export default App;

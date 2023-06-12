@@ -15,60 +15,60 @@ function Pagination({ target, initialData, onClick }) {
     this.render();
   };
 
-  const setButtonGroup = () => {
+  const renderButtonGroup = () => {
     const { maxPageCnt, currentPage } = this.state;
     const buttons = [];
 
     for (let i = 0; i < maxPageCnt; i++) {
-      const button = document.createElement("button");
-      button.appendChild(document.createTextNode(i + 1 + ""));
-      if (i + 1 === currentPage) button.style.color = "red";
-
-      button.addEventListener("click", (e) => {
-        e.preventDefault();
-
-        const curPage = parseInt(e.target.textContent);
-        onClick(curPage);
-      });
-      buttons.push(button);
+      buttons[i] = `
+        <button
+          class="page"
+          data-idx=${i + 1}
+        ${i + 1 === currentPage ? "style='color:red'" : ""}>
+          ${i + 1}
+        </button>`;
     }
 
-    return buttons;
+    return buttons.join("");
   };
 
   this.render = () => {
-    container.innerHTML = "";
-
-    const leftArrowButton = document.createElement("button");
-    const rightArrowButton = document.createElement("button");
-    const buttonGroup = setButtonGroup();
-
-    leftArrowButton.className = "arrow";
-    leftArrowButton.appendChild(document.createTextNode("<<"));
-    leftArrowButton.addEventListener("click", (e) => {
-      e.preventDefault();
-
-      if (this.state.currentPage === 1) return;
-      onClick(this.state.currentPage - 1);
-    });
-    rightArrowButton.className = "arrow";
-    rightArrowButton.appendChild(document.createTextNode(">>"));
-    rightArrowButton.addEventListener("click", (e) => {
-      e.preventDefault();
-      const { maxPageCnt, currentPage } = this.state;
-
-      if (currentPage === maxPageCnt) return;
-      onClick(currentPage + 1);
-    });
-
-    container.appendChild(leftArrowButton);
-    buttonGroup.forEach((button) => {
-      container.appendChild(button);
-    });
-    container.appendChild(rightArrowButton);
+    container.innerHTML = `
+      <button class="arrow left"><<</button>
+      ${renderButtonGroup()}
+      <button class="arrow right">>></button>
+      `;
   };
 
-  this.render();
+  const init = () => {
+    container.addEventListener("click", (e) => {
+      if (!onClick) return;
+
+      const { maxPageCnt, currentPage } = this.state;
+      const button = e.target.closest("button");
+
+      if (!button) return;
+
+      const classList = e.target.classList;
+      let curPage = 1;
+
+      if (classList[0] === "page") {
+        curPage = parseInt(e.target.dataset.idx);
+      } else if (classList[1] === "left") {
+        if (currentPage === 1) return;
+        curPage = currentPage - 1;
+      } else if (classList[1] === "right") {
+        if (currentPage === maxPageCnt) return;
+        curPage = currentPage + 1;
+      }
+
+      onClick(curPage);
+    });
+
+    this.render();
+  };
+
+  init();
 }
 
 export default Pagination;
