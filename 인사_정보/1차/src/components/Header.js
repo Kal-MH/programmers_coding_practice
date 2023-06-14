@@ -45,9 +45,7 @@ function Header({ target }) {
       switch (text) {
         case "HOME":
           window.history.pushState("", "", "/");
-          const homeEvent = new CustomEvent("urlChange", {
-            detail: { href: "/" },
-          });
+          const homeEvent = new CustomEvent("urlChange");
           document.dispatchEvent(homeEvent);
           break;
         case "SIGNUP":

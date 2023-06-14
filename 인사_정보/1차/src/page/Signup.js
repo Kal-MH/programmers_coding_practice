@@ -1,3 +1,4 @@
+import SignupView from "../components/SignupView.js";
 import Title from "../components/Title.js";
 
 function Signup({ target }) {
@@ -6,8 +7,12 @@ function Signup({ target }) {
 
     new Title({
       target,
-      titleText: "Hello, GreatPeople!",
+      titleText: "Sign Up, GreatPeople!",
       divClass: "content_title",
+    });
+
+    new SignupView({
+      target,
     });
   };
 }

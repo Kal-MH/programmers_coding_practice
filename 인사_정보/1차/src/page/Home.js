@@ -1,12 +1,19 @@
 import CardView from "../components/CardView.js";
 import Title from "../components/Title.js";
-import { getStorage } from "../utils/storage.js";
+import { getStorage, setStorage } from "../utils/storage.js";
 
 function Home({ target }) {
   this.render = () => {
     target.innerHTML = "";
 
-    const cardsData = getStorage("personalInfo", []);
+    const personalInfo = getStorage("personalInfo", []);
+    const cardsStatusData = getStorage("cardStatus", []);
+    const cardsData = personalInfo.map((p, i) => ({
+      name: p.name,
+      mbti: p.mbti,
+      idx: p.idx,
+      status: cardsStatusData[i].status,
+    }));
 
     new Title({
       target,
@@ -14,7 +21,14 @@ function Home({ target }) {
       divClass: "content_title",
     });
 
-    new CardView({ target, cardsData });
+    new CardView({
+      target,
+      cardsData,
+      onClick: (idx, classList) => {
+        cardsStatusData[idx].status = classList;
+        setStorage("cardStatus", cardsStatusData);
+      },
+    });
   };
 }
 

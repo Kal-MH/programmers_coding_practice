@@ -113,6 +113,9 @@ header {
   border-radius: 1rem;
   box-sizing: border-box;
   background: none;
+
+  font-size: 1em;
+  color: #5a5c66;
 }
 
 .form_elem select {
@@ -122,6 +125,9 @@ header {
   border-radius: 1rem;
   box-sizing: border-box;
   background: none;
+
+  font-size: 1em;
+  color: #5a5c66;
 }
 
 .form_elem button {
@@ -130,5 +136,26 @@ header {
   border: 0;
   border-radius: 1rem;
   box-sizing: border-box;
-  background: #dedede;
+  /* background: #dedede; */
+
+  font-size: 1em;
+  color: #ffffff;
+  background-color: #29323c;
+  cursor: pointer;
+}
+
+.form_elem button:hover {
+  background-color: #637488;
+}
+
+.form_elem label {
+  padding: 3px 5px;
+  font-size: 0.7em;
+  color: #5a5c66;
+
+  display: flex;
+}
+
+.form_elem label .mark {
+  color: red;
 }

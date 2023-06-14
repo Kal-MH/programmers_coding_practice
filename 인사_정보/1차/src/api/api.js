@@ -1,4 +1,4 @@
-const API_END_POINT = "http://localhost:5500/인사_정보/1차/src/data";
+const API_END_POINT = "./src/data";
 
 const request = async (url) => {
   try {
