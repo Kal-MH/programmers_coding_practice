@@ -1,3 +1,5 @@
+import { historyPush } from "../utils/route.js";
+
 function Header({ target }) {
   const header = document.createElement("header");
   target.appendChild(header);
@@ -44,18 +46,10 @@ function Header({ target }) {
 
       switch (text) {
         case "HOME":
-          window.history.pushState("", "", "/");
-          const homeEvent = new CustomEvent("urlChange");
-          document.dispatchEvent(homeEvent);
+          historyPush("/");
           break;
         case "SIGNUP":
-          window.history.pushState("", "", "/signup");
-          const signupEvent = new CustomEvent("urlChange", {
-            detail: { href: "/signup" },
-          });
-          document.dispatchEvent(signupEvent);
-          break;
-        default:
+          historyPush("/signup");
           break;
       }
     });

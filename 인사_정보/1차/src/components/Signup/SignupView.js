@@ -1,4 +1,4 @@
-import { getStorage, setStorage } from "../utils/storage.js";
+import { getStorage, setStorage } from "../../utils/storage.js";
 import { Button, Input, Select } from "./Form.js";
 
 function SignupView({ target }) {

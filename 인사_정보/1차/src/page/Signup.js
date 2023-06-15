@@ -1,4 +1,4 @@
-import SignupView from "../components/SignupView.js";
+import SignupView from "../components/Signup/SignupView.js";
 import Title from "../components/Title.js";
 
 function Signup({ target }) {
